@@ -49,5 +49,16 @@ if st.sidebar.button("🔍 Buscar Produtos"):
 
             visualizations.show_graphs(df_final)
 
-            st.download_button("📥 Baixar CSV", data=df_final.to_csv(index=False), file_name="radar_consumo.csv")
-            st.download_button("📥 Baixar Excel", data=df_final.to_excel(index=False), file_name="radar_consumo.xlsx")
+            import io
+
+# CSV continua como está
+st.download_button("📥 Baixar CSV", data=df_final.to_csv(index=False), file_name="radar_consumo.csv", mime="text/csv")
+
+# Excel corrigido
+output = io.BytesIO()
+with pd.ExcelWriter(output, engine='openpyxl') as writer:
+    df_final.to_excel(writer, index=False)
+data_xlsx = output.getvalue()
+
+st.download_button("📥 Baixar Excel", data=data_xlsx, file_name="radar_consumo.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
